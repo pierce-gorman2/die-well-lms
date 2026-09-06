@@ -1,0 +1,11 @@
+name = "die-well-lms"
+main = "src/index.js"
+compatibility_date = "2026-09-06"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+[[kv_namespaces]]
+binding = "LMS_DB"
+id = "1e4a864d521d4b4ca201582611c0bd60"
