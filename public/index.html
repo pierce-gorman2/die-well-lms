@@ -1,0 +1,457 @@
+<meta charset="utf-8" />
+<title>Last Man Standing: Pull-Ups</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg: #0a0b0d;
+    --surface: #17181c;
+    --surface-2: #1f2126;
+    --border: #2a2d33;
+    --text: #f2ede3;
+    --text-dim: #9a9fa8;
+    --text-faint: #5c616a;
+    --accent: #ff4620;
+    --accent-dim: #3d1a10;
+    --gold: #f0b429;
+    --blue: #4da3ff;
+    --danger: #ff4620;
+    --font-display: "Anton", "Arial Narrow", sans-serif;
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(255,70,32,0.10), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--accent); color:#0a0b0d; }
+
+  .wrap{ max-width:980px; margin:0 auto; padding:48px 20px 80px; }
+
+  /* ---------- Hero ---------- */
+  .hero{ text-align:center; padding:12px 0 36px; border-bottom:1px solid var(--border); margin-bottom:36px; }
+  .eyebrow{
+    font-family:var(--font-mono); font-weight:600; font-size:12px; letter-spacing:.28em;
+    text-transform:uppercase; color:var(--text-dim); margin:0 0 18px;
+  }
+  h1.title{
+    font-family:var(--font-display); font-weight:400; text-transform:uppercase;
+    font-size:clamp(40px, 9vw, 88px); line-height:.92; letter-spacing:.01em;
+    margin:0; text-wrap:balance;
+    background:linear-gradient(180deg, #ffffff 0%, #cfd2d8 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .subtitle{
+    font-family:var(--font-display); font-weight:400; text-transform:uppercase;
+    font-size:clamp(18px, 3.4vw, 30px); letter-spacing:.08em; color:var(--accent);
+    margin:6px 0 0;
+  }
+  .tagline{ color:var(--text-dim); font-size:15px; margin:14px 0 22px; }
+
+  .kickoff-pill{
+    display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono);
+    font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--text-dim); background:var(--surface); border:1px solid var(--border);
+    border-radius:999px; padding:8px 16px; cursor:pointer;
+  }
+  .kickoff-pill:hover{ border-color:var(--accent); color:var(--text); }
+  .kickoff-pill b{ color:var(--text); font-weight:700; }
+  .kickoff-edit{ display:none; margin-top:14px; align-items:center; justify-content:center; gap:8px; }
+  .kickoff-edit.open{ display:flex; }
+  .kickoff-edit input[type="date"]{
+    font-family:var(--font-mono); background:var(--surface-2); border:1px solid var(--border);
+    color:var(--text); border-radius:8px; padding:8px 10px; font-size:13px;
+  }
+  .sync-status{
+    display:flex; align-items:center; justify-content:center; gap:7px; margin-top:16px;
+    font-family:var(--font-mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--text-faint);
+  }
+  .sync-dot{ width:7px; height:7px; border-radius:50%; background:var(--text-faint); }
+  .sync-status.live .sync-dot{ background:var(--gold); box-shadow:0 0 6px var(--gold); }
+  .sync-status.live{ color:var(--gold); }
+  .sync-status.error .sync-dot{ background:var(--danger); }
+  .sync-status.error{ color:var(--danger); }
+
+  /* ---------- Stat tiles ---------- */
+  .stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:36px; }
+  .stat{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:18px 16px; text-align:center;
+  }
+  .stat .num{ font-family:var(--font-mono); font-weight:700; font-size:clamp(22px,4vw,32px); font-variant-numeric:tabular-nums; }
+  .stat .lbl{ font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--text-dim); margin-top:6px; }
+  .stat.leader .num{ color:var(--gold); }
+
+  /* ---------- Cards / sections ---------- */
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-radius:16px;
+    padding:24px; margin-bottom:24px;
+  }
+  .card h2{
+    font-family:var(--font-display); font-weight:400; text-transform:uppercase;
+    letter-spacing:.04em; font-size:22px; margin:0 0 4px;
+  }
+  .card .sub{ color:var(--text-dim); font-size:13px; margin:0 0 18px; }
+
+  /* ---------- Log form ---------- */
+  .founder-picker{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px; }
+  .founder-btn{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    background:var(--surface-2); border:1px solid var(--border); border-radius:12px;
+    padding:14px 8px; color:var(--text-dim); font-weight:600; font-size:15px; cursor:pointer;
+    transition:border-color .15s, color .15s, background .15s;
+  }
+  .founder-btn .dot{ width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+  .founder-btn:hover{ color:var(--text); }
+  .founder-btn.active{ color:var(--text); background:var(--surface); }
+  .founder-btn.active[data-f="pierce"]{ border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset; }
+  .founder-btn.active[data-f="kadon"]{ border-color:var(--blue); box-shadow:0 0 0 1px var(--blue) inset; }
+  .founder-btn.active[data-f="luis"]{ border-color:var(--gold); box-shadow:0 0 0 1px var(--gold) inset; }
+
+  .reps-row{ display:flex; gap:10px; margin-bottom:14px; }
+  .stepper{
+    display:flex; align-items:center; background:var(--surface-2); border:1px solid var(--border);
+    border-radius:12px; overflow:hidden; flex:1;
+  }
+  .stepper button{
+    background:none; border:none; color:var(--text-dim); font-family:var(--font-mono);
+    font-size:20px; font-weight:700; width:48px; height:52px; cursor:pointer;
+  }
+  .stepper button:hover{ color:var(--text); }
+  .stepper input{
+    flex:1; text-align:center; background:none; border:none; color:var(--text);
+    font-family:var(--font-mono); font-size:22px; font-weight:700; font-variant-numeric:tabular-nums;
+    -moz-appearance:textfield;
+  }
+  .stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+  .note-input{
+    flex:1.4; background:var(--surface-2); border:1px solid var(--border); border-radius:12px;
+    color:var(--text); font-family:var(--font-body); font-size:14px; padding:0 14px;
+  }
+  .note-input::placeholder{ color:var(--text-faint); }
+
+  .log-btn{
+    width:100%; background:var(--accent); color:#fff; border:none; border-radius:12px;
+    font-family:var(--font-display); letter-spacing:.06em; text-transform:uppercase;
+    font-size:18px; padding:15px; cursor:pointer; transition:filter .15s, transform .1s;
+  }
+  .log-btn:hover{ filter:brightness(1.08); }
+  .log-btn:active{ transform:scale(.99); }
+  .log-btn:disabled{ background:var(--surface-2); color:var(--text-faint); cursor:not-allowed; }
+
+  .toast{
+    margin-top:12px; text-align:center; font-family:var(--font-mono); font-size:13px;
+    color:var(--gold); opacity:0; transition:opacity .3s; height:16px;
+  }
+  .toast.show{ opacity:1; }
+
+  /* ---------- Standings ---------- */
+  .standings-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  @media (max-width:640px){ .standings-grid{ grid-template-columns:1fr; } .founder-picker{ grid-template-columns:1fr; } .stats{ grid-template-columns:1fr; } }
+
+  .rank-row{ display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
+  .rank-row:last-child{ border-bottom:none; }
+  .rank-num{ font-family:var(--font-mono); font-weight:700; color:var(--text-faint); font-size:14px; width:20px; }
+  .rank-row.rank-1 .rank-num{ color:var(--gold); }
+  .rank-body{ flex:1; min-width:0; }
+  .rank-top{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; }
+  .rank-name{ font-weight:700; font-size:14px; }
+  .rank-count{ font-family:var(--font-mono); font-weight:700; font-size:14px; font-variant-numeric:tabular-nums; }
+  .rank-bar-track{ height:6px; background:var(--surface-2); border-radius:3px; overflow:hidden; }
+  .rank-bar-fill{ height:100%; border-radius:3px; transition:width .4s ease; }
+
+  /* ---------- Activity feed ---------- */
+  .feed-row{ display:flex; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid var(--border); font-size:14px; }
+  .feed-row:last-child{ border-bottom:none; }
+  .feed-dot{ width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .feed-name{ font-weight:600; width:56px; flex-shrink:0; }
+  .feed-reps{ font-family:var(--font-mono); font-weight:700; color:var(--text); width:64px; flex-shrink:0; }
+  .feed-note{ color:var(--text-dim); flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .feed-time{ color:var(--text-faint); font-family:var(--font-mono); font-size:12px; flex-shrink:0; }
+  .feed-del{
+    background:none; border:none; color:var(--text-faint); font-size:16px; cursor:pointer;
+    padding:2px 6px; flex-shrink:0; line-height:1;
+  }
+  .feed-del:hover{ color:var(--danger); }
+  .empty-state{ color:var(--text-faint); font-size:13px; text-align:center; padding:20px 0; }
+
+  footer{ text-align:center; color:var(--text-faint); font-size:12px; margin-top:8px; }
+</style>
+
+<div class="wrap">
+  <div class="hero">
+    <p class="eyebrow">Die Well Media Presents</p>
+    <h1 class="title">Last Man<br/>Standing</h1>
+    <p class="subtitle">Pull-Up Challenge</p>
+    <p class="tagline">Three founders. One bar. No excuses.</p>
+    <div class="kickoff-pill" id="kickoffPill">Kickoff: <b id="kickoffText">TBD</b></div>
+    <div class="kickoff-edit" id="kickoffEdit">
+      <input type="date" id="kickoffInput" />
+      <button class="log-btn" style="width:auto;padding:8px 16px;font-size:13px;" id="kickoffSave">Save</button>
+    </div>
+    <div class="sync-status" id="syncStatus"><span class="sync-dot"></span><span id="syncStatusText">Connecting to live sync...</span></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="num" id="statTeamTotal">0</div><div class="lbl">Team Total</div></div>
+    <div class="stat"><div class="num" id="statWeekTotal">0</div><div class="lbl">This Week</div></div>
+    <div class="stat leader"><div class="num" id="statLeader">-</div><div class="lbl">Leading All-Time</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Log Reps</h2>
+    <p class="sub">Pick your name, punch in your set, lock it in.</p>
+    <div class="founder-picker" id="founderPicker"></div>
+    <div class="reps-row">
+      <div class="stepper">
+        <button type="button" id="repsMinus">−</button>
+        <input type="number" id="repsInput" value="10" min="0" />
+        <button type="button" id="repsPlus">+</button>
+      </div>
+      <input class="note-input" id="noteInput" placeholder="Note (optional)" maxlength="60" />
+    </div>
+    <button class="log-btn" id="logBtn">Log It</button>
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <div class="card">
+    <h2>The Standings</h2>
+    <p class="sub">Weekly bragging rights vs. the all-time crown.</p>
+    <div class="standings-grid">
+      <div>
+        <div class="sub" style="text-transform:uppercase;letter-spacing:.1em;font-size:11px;color:var(--text-faint);margin-bottom:10px;">This Week</div>
+        <div id="weekBoard"></div>
+      </div>
+      <div>
+        <div class="sub" style="text-transform:uppercase;letter-spacing:.1em;font-size:11px;color:var(--text-faint);margin-bottom:10px;">All-Time</div>
+        <div id="allBoard"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>The Log</h2>
+    <p class="sub">Every rep, on record.</p>
+    <div id="feed"></div>
+  </div>
+
+  <footer>Built for Die Well Media &mdash; no login, just accountability.</footer>
+</div>
+
+<script>
+  const FOUNDERS = [
+    { id:'pierce', name:'Pierce', color:'var(--accent)' },
+    { id:'kadon',  name:'Kadon',  color:'var(--blue)' },
+    { id:'luis',   name:'Luis',   color:'var(--gold)' },
+  ];
+  const founderMap = Object.fromEntries(FOUNDERS.map(f => [f.id, f]));
+
+  let selectedFounder = localStorage.getItem('dwm_lastFounder') || FOUNDERS[0].id;
+  let allLogs = [];
+
+  // ---------- Founder picker ----------
+  const picker = document.getElementById('founderPicker');
+  FOUNDERS.forEach(f => {
+    const btn = document.createElement('button');
+    btn.className = 'founder-btn';
+    btn.dataset.f = f.id;
+    btn.innerHTML = `<span class="dot" style="background:${f.color}"></span>${f.name}`;
+    btn.addEventListener('click', () => { selectedFounder = f.id; localStorage.setItem('dwm_lastFounder', f.id); renderPicker(); });
+    picker.appendChild(btn);
+  });
+  function renderPicker(){
+    [...picker.children].forEach(btn => btn.classList.toggle('active', btn.dataset.f === selectedFounder));
+  }
+  renderPicker();
+
+  // ---------- Reps stepper ----------
+  const repsInput = document.getElementById('repsInput');
+  document.getElementById('repsMinus').addEventListener('click', () => {
+    repsInput.value = Math.max(0, (parseInt(repsInput.value)||0) - 1);
+  });
+  document.getElementById('repsPlus').addEventListener('click', () => {
+    repsInput.value = (parseInt(repsInput.value)||0) + 1;
+  });
+
+  // ---------- Toast ----------
+  const toast = document.getElementById('toast');
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toast.classList.remove('show'), 2200);
+  }
+
+  // ---------- Logging ----------
+  const logBtn = document.getElementById('logBtn');
+  logBtn.addEventListener('click', async () => {
+    const reps = parseInt(repsInput.value) || 0;
+    if (reps <= 0) { showToast('Enter a rep count above zero.'); return; }
+    const note = document.getElementById('noteInput').value.trim().slice(0, 60);
+    logBtn.disabled = true;
+    try {
+      const res = await fetch('/api/logs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ founder: selectedFounder, reps, note }),
+      });
+      if (!res.ok) throw new Error('bad response');
+      showToast(`Logged ${reps} for ${founderMap[selectedFounder].name}.`);
+      document.getElementById('noteInput').value = '';
+      repsInput.value = 10;
+      await refreshLogs();
+    } catch (e) {
+      showToast('Could not save - try again.');
+    } finally {
+      logBtn.disabled = false;
+    }
+  });
+
+  // ---------- Kickoff date ----------
+  const kickoffPill = document.getElementById('kickoffPill');
+  const kickoffEdit = document.getElementById('kickoffEdit');
+  const kickoffText = document.getElementById('kickoffText');
+  const kickoffInput = document.getElementById('kickoffInput');
+  kickoffPill.addEventListener('click', () => {
+    kickoffEdit.classList.toggle('open');
+  });
+  document.getElementById('kickoffSave').addEventListener('click', async () => {
+    if (!kickoffInput.value) return;
+    await fetch('/api/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ startDate: kickoffInput.value }),
+    });
+    kickoffEdit.classList.remove('open');
+    await refreshConfig();
+  });
+  function fmtDate(iso){
+    const d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString(undefined, { month:'short', day:'numeric', year:'numeric' });
+  }
+
+  // ---------- Aggregation & rendering ----------
+  function startOfWeek(d){
+    const dt = new Date(d);
+    const day = (dt.getDay() + 6) % 7; // Monday = 0
+    dt.setHours(0,0,0,0);
+    dt.setDate(dt.getDate() - day);
+    return dt;
+  }
+
+  function renderBoard(el, totals){
+    const rows = FOUNDERS.map(f => ({ f, count: totals[f.id] || 0 }))
+      .sort((a,b) => b.count - a.count);
+    const max = Math.max(1, ...rows.map(r => r.count));
+    el.innerHTML = rows.map((r, i) => `
+      <div class="rank-row ${i===0 && r.count>0 ? 'rank-1' : ''}">
+        <div class="rank-num">${String(i+1).padStart(2,'0')}</div>
+        <div class="rank-body">
+          <div class="rank-top">
+            <span class="rank-name">${r.f.name}</span>
+            <span class="rank-count">${r.count}</span>
+          </div>
+          <div class="rank-bar-track"><div class="rank-bar-fill" style="width:${(r.count/max*100)}%;background:${r.f.color}"></div></div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderFeed(logs){
+    const feed = document.getElementById('feed');
+    if (!logs.length){
+      feed.innerHTML = '<div class="empty-state">No reps logged yet. Be the first.</div>';
+      return;
+    }
+    feed.innerHTML = logs.slice(0, 40).map(log => {
+      const f = founderMap[log.founder] || { name: log.founder, color:'var(--text-faint)' };
+      const t = new Date(log.loggedAt);
+      const timeStr = t.toLocaleDateString(undefined,{month:'short',day:'numeric'}) + ' · ' + t.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+      return `
+        <div class="feed-row">
+          <span class="feed-dot" style="background:${f.color}"></span>
+          <span class="feed-name">${f.name}</span>
+          <span class="feed-reps">${log.reps} reps</span>
+          <span class="feed-note">${log.note ? log.note : ''}</span>
+          <span class="feed-time">${timeStr}</span>
+          <button class="feed-del" data-id="${log.id}" title="Remove entry">&times;</button>
+        </div>
+      `;
+    }).join('');
+    feed.querySelectorAll('.feed-del').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        await fetch('/api/logs/' + encodeURIComponent(btn.dataset.id), { method: 'DELETE' });
+        await refreshLogs();
+      });
+    });
+  }
+
+  function renderAll(){
+    const weekStart = startOfWeek(new Date());
+    const weekTotals = {}, allTotals = {};
+    let teamTotal = 0, weekTotal = 0;
+    for (const log of allLogs){
+      allTotals[log.founder] = (allTotals[log.founder]||0) + log.reps;
+      teamTotal += log.reps;
+      if (new Date(log.loggedAt) >= weekStart){
+        weekTotals[log.founder] = (weekTotals[log.founder]||0) + log.reps;
+        weekTotal += log.reps;
+      }
+    }
+    document.getElementById('statTeamTotal').textContent = teamTotal.toLocaleString();
+    document.getElementById('statWeekTotal').textContent = weekTotal.toLocaleString();
+    const leaderEntry = Object.entries(allTotals).sort((a,b) => b[1]-a[1])[0];
+    document.getElementById('statLeader').textContent = leaderEntry ? founderMap[leaderEntry[0]].name : '-';
+
+    renderBoard(document.getElementById('weekBoard'), weekTotals);
+    renderBoard(document.getElementById('allBoard'), allTotals);
+    renderFeed(allLogs);
+  }
+
+  renderAll(); // render an empty/zero state immediately
+
+  // ---------- Connect to the API ----------
+  const syncStatus = document.getElementById('syncStatus');
+  const syncStatusText = document.getElementById('syncStatusText');
+  function setSyncStatus(state, text){
+    syncStatus.className = 'sync-status ' + state;
+    syncStatusText.textContent = text;
+  }
+
+  async function refreshLogs(){
+    try {
+      const res = await fetch('/api/logs');
+      if (!res.ok) throw new Error('bad response');
+      allLogs = (await res.json()).sort((a, b) => new Date(b.loggedAt) - new Date(a.loggedAt));
+      renderAll();
+      setSyncStatus('live', 'Live');
+    } catch (e) {
+      setSyncStatus('error', 'Offline - retrying...');
+    }
+  }
+
+  async function refreshConfig(){
+    try {
+      const res = await fetch('/api/config');
+      if (!res.ok) throw new Error('bad response');
+      const data = await res.json();
+      if (data && data.startDate){
+        kickoffText.textContent = fmtDate(data.startDate);
+        kickoffInput.value = data.startDate;
+      }
+    } catch (e) { /* kickoff date is non-critical; ignore */ }
+  }
+
+  refreshLogs();
+  refreshConfig();
+  setInterval(refreshLogs, 5000);
+</script>
