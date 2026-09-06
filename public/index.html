@@ -123,12 +123,12 @@
     border-radius:12px; overflow:hidden; flex:1;
   }
   .stepper button{
-    background:none; border:none; color:var(--text-dim); font-family:var(--font-mono);
+    flex:0 0 48px; background:none; border:none; color:var(--text-dim); font-family:var(--font-mono);
     font-size:20px; font-weight:700; width:48px; height:52px; cursor:pointer;
   }
   .stepper button:hover{ color:var(--text); }
   .stepper input{
-    flex:1; text-align:center; background:none; border:none; color:var(--text);
+    flex:1 1 auto; min-width:0; text-align:center; background:none; border:none; color:var(--text);
     font-family:var(--font-mono); font-size:22px; font-weight:700; font-variant-numeric:tabular-nums;
     -moz-appearance:textfield;
   }
@@ -156,7 +156,14 @@
 
   /* ---------- Standings ---------- */
   .standings-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-  @media (max-width:640px){ .standings-grid{ grid-template-columns:1fr; } .founder-picker{ grid-template-columns:1fr; } .stats{ grid-template-columns:1fr; } }
+  @media (max-width:640px){
+    .standings-grid{ grid-template-columns:1fr; }
+    .founder-picker{ grid-template-columns:1fr; }
+    .stats{ grid-template-columns:1fr; }
+    .reps-row{ flex-direction:column; }
+    .stepper{ width:100%; }
+    .note-input{ width:100%; padding:14px; min-height:52px; }
+  }
 
   .rank-row{ display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
   .rank-row:last-child{ border-bottom:none; }
@@ -208,6 +215,21 @@
   </div>
 
   <div class="card">
+    <h2>The Standings</h2>
+    <p class="sub">Weekly bragging rights vs. the all-time crown.</p>
+    <div class="standings-grid">
+      <div>
+        <div class="sub" style="text-transform:uppercase;letter-spacing:.1em;font-size:11px;color:var(--text-faint);margin-bottom:10px;">This Week</div>
+        <div id="weekBoard"></div>
+      </div>
+      <div>
+        <div class="sub" style="text-transform:uppercase;letter-spacing:.1em;font-size:11px;color:var(--text-faint);margin-bottom:10px;">All-Time</div>
+        <div id="allBoard"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
     <h2>Log Reps</h2>
     <p class="sub">Pick your name, punch in your set, lock it in.</p>
     <div class="founder-picker" id="founderPicker"></div>
@@ -221,21 +243,6 @@
     </div>
     <button class="log-btn" id="logBtn">Log It</button>
     <div class="toast" id="toast"></div>
-  </div>
-
-  <div class="card">
-    <h2>The Standings</h2>
-    <p class="sub">Weekly bragging rights vs. the all-time crown.</p>
-    <div class="standings-grid">
-      <div>
-        <div class="sub" style="text-transform:uppercase;letter-spacing:.1em;font-size:11px;color:var(--text-faint);margin-bottom:10px;">This Week</div>
-        <div id="weekBoard"></div>
-      </div>
-      <div>
-        <div class="sub" style="text-transform:uppercase;letter-spacing:.1em;font-size:11px;color:var(--text-faint);margin-bottom:10px;">All-Time</div>
-        <div id="allBoard"></div>
-      </div>
-    </div>
   </div>
 
   <div class="card">
